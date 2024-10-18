@@ -26,7 +26,7 @@
 
 //ADC
 #define SENSOR_COUNT 4
-float base_speed = 800;  // 基????��?��??��?��???��?��??��?��?
+float base_speed = 700;  // 基?��?
 #define dt 0.01  // 制御周
 
 #define scale 7//サイズ合わ
@@ -34,7 +34,7 @@ float base_speed = 800;  // 基????��?��??��?��???��?��?
 // PID制御のための変数
 float Kp = 0.28;  // 比例ゲイン
 float Ki = 0.0;  // 積�?ゲイン
-float Kd = 0.005;  // 微
+float Kd = 0.006;  // 微
 
 float previous_error = 0.0;  // 前回のエラー
 float integral = 0.0;  // 積�?の合�?
@@ -44,18 +44,16 @@ float target_speed_R = 0.0;
 float current_speed_L = 0.0;
 float current_speed_R = 0.0;
 
-float side_r_flag,side_l_flag = 0;
-float side_l_time = 0;
-float side_r_time = 0;
-float stop_flag = 0;
+// センサの閾値
+float threshold = 2000.0;
 
-uint16_t main_sens[SENSOR_COUNT];
-uint16_t side_sens[2];
+uint16_t analog[SENSOR_COUNT];
+uint16_t analog1[2];
 float Line1_sens[SENSOR_COUNT];
 float Line2_sens[SENSOR_COUNT];
 float Line3_sens[2];
 
-
+int start_flag = 0;
 
 float Line1_sens1,Line1_sens2,Line1_sens3,Line1_sens4;
 float Line2_sens1,Line2_sens2,Line2_sens3,Line2_sens4;
@@ -116,19 +114,67 @@ void readSens2(void);
 void controlMotor(double duty_L, double duty_R);
 
 
+void controlMotor(double duty_L, double duty_R){
+	  // 左モータの制御
+	      if (duty_L >= 0) {
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); // PHをHIGH(正転)
+	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, duty_L);
+	      } else {
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // PHをLOW
+	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, -duty_L);
+	      }
 
-int _write(int file, char *ptr, int len) {
-    HAL_UART_Transmit(&huart2, (uint8_t*) ptr, len, HAL_MAX_DELAY);
-    return len;
+	      // 右モータの制御
+	      if (duty_R >= 0) {
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET); // PHをHIGH(正転)
+	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, duty_R);
+	      } else {
+	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET); // PHをLOW()
+	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, -duty_R);
+	      }
+
 }
 
+int r2 = 0;
+int k = 0;
+//float BASE_SPEED_DEFAULT = base_speed;
+
+void readSens2(){
+
+	  if (HAL_ADC_Start_DMA(&hadc2,(uint32_t *)analog1,2) != HAL_OK){
+		  Error_Handler();
+	  }
+	  	  //  HAL_Delay(1);
+	  	  char msg[100];
+	        snprintf(msg, sizeof(msg), "ADC Value 0: %u, ADC Value 1: %u\r\n", analog[0], analog[1]);
+	        HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+
+	        // ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?ータを�??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
+	        Line3_sens[0] = analog1[0];
+	        Line3_sens[1] = analog1[1];
+
+	   if(Line3_sens[1] > 450 && Line3_sens[0] < 3800){
+		   r2++;
+		   HAL_Delay(50);
+	   }
+	   while(r2 > 1){
+			controlMotor(0, 0);
+
+			}
+
+
 /*
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	//if (htim->Instance == TIM16) {
-		readSens2();
-	//}
-}*/
+	   if(Line3_sens[1] < 450 && Line3_sens[0] > 3800){
+	   		   k++;
+
+	   	   }
+	   if ((7 < k && k < 16) || k == 18 || k == 23 || (50 < k && k < 53) || k == 54) {
+	       base_speed = 900;
+	   }else {
+		    base_speed = 700;
+
+  	  	  	}*/
+  }
 /* USER CODE END 0 */
 
 /**
@@ -168,11 +214,14 @@ int main(void)
   MX_ADC2_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-  //HAL_TIM_Base_Start_IT(&htim16);
+  HAL_TIM_Base_Start_IT(&htim16);
 
+  uint16_t analog[4];
+  if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analog,4) != HAL_OK){
+           Error_Handler();
+  }
 
-
-  //エンコー????��?��??��?��???��?��??��?��?
+  //エンコー?��?
   HAL_TIM_Encoder_Start( &htim1, TIM_CHANNEL_ALL );
   HAL_TIM_Encoder_Start( &htim3, TIM_CHANNEL_ALL );
 
@@ -190,27 +239,34 @@ int main(void)
   /* __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 5000);
   //motor_R(50.0);  // Example duty cycle value   */
 
-  void controlMotor(double duty_L, double duty_R){
-  	  // 左モータの制御
-  	      if (duty_L >= 0) {
-  	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); // PHをHIGH(正転)
-  	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, duty_L);
-  	      } else {
-  	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); // PHをLOW
-  	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, -duty_L);
-  	      }
 
-  	      // 右モータの制御
-  	      if (duty_R >= 0) {
-  	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET); // PHをHIGH(正転)
-  	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, duty_R);
-  	      } else {
-  	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET); // PHをLOW()
-  	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, -duty_R);
-  	      }
 
+  void readSens(void){
+	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analog,4) != HAL_OK){
+	              Error_Handler();
+	     }
+	    //char msg[100];
+      // SピンをHIGHに
+	    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_1, GPIO_PIN_SET);
+	    //HAL_Delay(1);
+	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
+	      /*snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i, analog[i]);
+	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);*/
+	      Line1_sens[i] = analog[i];
+	    }
+	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) analog,4) != HAL_OK){
+	              Error_Handler();
+	     }
+
+	   //Sをlow
+	    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_RESET);
+	    //HAL_Delay(1);
+	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
+	      /*snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i+4, analog[i]);
+	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);*/
+	      Line2_sens[i] = analog[i];//?
+	    }
   }
-
 
 
   float calculateError() {
@@ -228,6 +284,31 @@ int main(void)
 	  return   Line2_sum - Line1_sum;
 
 
+	  /*
+      float weighted_sum = 0.0;
+      float sum = 0.0;
+      float weights[SENSOR_COUNT * 2] = {-5, -4, -2, -1, 1, 2, 4, 5};
+
+      for (int i = 0; i < SENSOR_COUNT; i++) {
+          if (Line1_sens[i] > threshold) {
+              weighted_sum += weights[i];
+              sum += 1;
+          }
+      }
+
+      for (int i = 0; i < SENSOR_COUNT; i++) {
+          if (Line2_sens[i] > threshold) {
+              weighted_sum += weights[i + SENSOR_COUNT];
+              sum += 1;
+          }
+      }
+
+      if (sum == 0) {
+          return 0;
+      }
+
+      return weighted_sum / sum;
+      */
   }
 
   void Encoder_Read(void) {
@@ -264,84 +345,10 @@ int main(void)
       current_speed_R = (float)cnt_R / scale;
   }
 
-  void readSens(void){
-  	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens,4) != HAL_OK){
-  	              Error_Handler();
-  	     }
-  	    //char msg[100];
-        // SピンをHIGHに
-  	    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_1, GPIO_PIN_SET);
-  	    //HAL_Delay(1);
-  	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
-  	      /*snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i, main_sens[i]);
-  	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);*/
-  	      Line1_sens[i] = main_sens[i];
-  	    }
-  	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens,4) != HAL_OK){
-  	              Error_Handler();
-  	     }
-
-  	   //Sをlow
-  	    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_RESET);
-  	    //HAL_Delay(1);
-  	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
-  	      /*snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i+4, main_sens[i]);
-  	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);*/
-  	      Line2_sens[i] = main_sens[i];//?
-  	    }
-    }
-
-    //int r2 = 0;
-    //int k = 0;
-    //float BASE_SPEED_DEFAULT = base_speed;
-
-    void readSens2(){
-
-    	  if (HAL_ADC_Start_DMA(&hadc2,(uint32_t *)side_sens,2) != HAL_OK){
-    		  Error_Handler();
-    	  }
-    	  	  //  HAL_Delay(1);
-    	  	  //char msg[100];
-    	        //snprintf(msg, sizeof(msg), "ADC Value 0: %u, ADC Value 1: %u\r\n", side_sens[0], side_sens[1]);
-    	        //HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-
-    	        // ????????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?ータを�?????????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��????????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��???????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?
-    	        Line3_sens[0] = side_sens[0];
-    	        Line3_sens[1] = side_sens[1];
-
-    	        /*
-    	   if(Line3_sens[1] > 650 && Line3_sens[0] < 3800){
-    		   r2++;
-    		   //HAL_Delay(50);
-    	   }
-    	   while(r2 > 1){
-    			controlMotor(0, 0);
-
-    			}
-
-
-
-    	   if(Line3_sens[1] < 650 && Line3_sens[0] > 3800){
-    	   		   k++;
-
-    	   	   }
-    	   if ((7 < k && k < 16) || k == 18 || k == 23 || (50 < k && k < 53) || k == 54) {
-    	       base_speed = 900;
-    	   }else {
-    		    base_speed = 700;
-
-      	  	  	}*/
-      }
-
-void readSensors(){
-	readSens();
-	HAL_Delay(1);
-	readSens2();
-}
 
   void SpeedContorol() {
       // 読み取りセンサの値
-      //readSens();
+      readSens();
 
       // エラーを計�?
       float error = calculateError();
@@ -395,81 +402,8 @@ void readSensors(){
       // モータを制御
       controlMotor(duty_L, duty_R);
       //readSens2();
-      //flag();
   }
 
-  void button(){
-  	 uint8_t button_state = 0;
-  	  button_state = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3);
-
-  		if (button_state == 0){
-  			stop_flag = 0;
-  			base_speed = 800;
-  			//printf("Button PB3 Pressed\r\n");
-  		}
-  }
-
-void flag(void){
-
-	  if(Line3_sens[0] > 3800){
-		  side_l_flag = 1;
-		  side_l_time = 0;
-
-
-	  }
-	  if(side_l_flag == 1){
-		  side_l_time++;
-	  }
-	  if(side_l_time >= 70){
-	  //HAL_Delay(10);
-		  side_l_time = 0;
-		  side_l_flag = 0;
-		  }
-	  if(Line3_sens[1] > 460){
-		  side_r_flag = 1;
-	  }else{
-		  side_r_flag = 0;
-	  }
-	  if(side_r_flag == 1 && side_l_flag == 0 ){
-		  stop_flag++;
-		  HAL_Delay(50);
-	  }
-
-	  while(stop_flag >= 2){
-		  //controlMotor(0,0);
-		  base_speed = 100;
-		  readSens();
-
-			// エラーを計�?
-			float error = calculateError();
-
-			// PID制御の計�?
-			float derivative = (error - previous_error) / dt;
-			integral += error;
-
-			float P =Kp * error;
-			float I =Ki * integral;
-			float D =Kd * derivative;
-
-			float output = P + I + D;
-			previous_error = error;
-
-			target_speed_L = base_speed - output;
-			target_speed_R = base_speed + output;
-
-			float duty_L = -1*(target_speed_L);
-			float duty_R = -1*(target_speed_R);
-
-			// モータを制御
-			controlMotor(duty_L, duty_R);
-			button();
-			if(stop_flag == 0){
-				break;
-			}
-
-
-	  }
-  }
 
 
 
@@ -481,23 +415,17 @@ void flag(void){
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
 
-
-
   while(1)
   {
 
 	    //HAL_Delay(100000);
+
 	    //readSens();  // センサの値を読み取る
-	  //HAL_Delay(1);
-
-	    readSensors();
-	    SpeedContorol();  //モータを制御 修正するべ????��?��??��?��???��?��??��?��?8/5 エンコー????��?��??��?��???��?��??��?��?が原????��?��??��?��???��?��??��?��?
-	    flag();
-	  //button();
+	    SpeedContorol();  //モータを制御 修正するべ?��?8/5 エンコー?��?が原?��?
 	    //Encoder_Read();
-
+	    HAL_Delay(1);
 	   //controlMotor(-1000, -1000);
-	  //readSens2(); //ゴール判????��?��??��?��???��?��??��?��?
+	  //readSens2(); //ゴール判?��?
 
     /* USER CODE END WHILE */
 
@@ -883,9 +811,9 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 3;
+  htim16.Init.Prescaler = 1;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 3199;
+  htim16.Init.Period = 9000;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -1001,6 +929,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, MOT2PH_Pin|MOT1PH_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pin : S_gpio_out_Pin */
   GPIO_InitStruct.Pin = S_gpio_out_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -1015,16 +946,22 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pin : SW2_Pin */
+  GPIO_InitStruct.Pin = SW2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SW2_GPIO_Port, &GPIO_InitStruct);
 
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	//if (htim->Instance == TIM16) {
+		readSens2();
+	}
+}
 /* USER CODE END 4 */
 
 /**

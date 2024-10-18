@@ -89,6 +89,8 @@ void Error_Handler(void);
 #define ENC1_1_GPIO_Port GPIOB
 #define T16_ch1N_wari_Pin GPIO_PIN_6
 #define T16_ch1N_wari_GPIO_Port GPIOB
+#define SW2_Pin GPIO_PIN_7
+#define SW2_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
