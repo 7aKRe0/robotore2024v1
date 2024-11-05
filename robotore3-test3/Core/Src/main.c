@@ -30,9 +30,9 @@
 // 実際の定義と初期化
 float base_speed = 500;
 float max_speed = 900;
-float Kp = 0.01;
-float Ki = 0.0;
-float Kd = 0.0;
+float Kp = 0.06;
+float Ki = 0.0;//不要
+float Kd = 0.0008;
 float previous_error = 0.0;
 float integral = 0.0;
 float target_speed_L = 0.0;
@@ -188,7 +188,7 @@ void mapFirstLayer() {
 
 void mapSecondLayer() {
 	firstLapComplete =1;
-   base_speed = 600;
+   base_speed = 400;
 //   flag2();
 }
 
