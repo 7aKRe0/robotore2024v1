@@ -1,0 +1,19 @@
+# ビルド生成物の除外
+/Debug/
+/Release/
+
+# IDE設定ファイルの除外
+/.settings/
+/.cproject
+.project
+.mxproject
+*.launch
+
+# その他
+*.o
+*.d
+*.su
+*.elf
+*.map
+*.list
+*.log
