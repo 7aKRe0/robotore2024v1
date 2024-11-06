@@ -342,7 +342,7 @@ int main(void)
 //	  playSound(1000, 100,0.9);
 //	  HAL_Delay(1000);
 
-	  loop();
+//	  loop();
 
 //	  handleButtonPress();
 
@@ -351,7 +351,7 @@ int main(void)
 //	    Encoder_Read();
 //
 //	   controlMotor(-500, -500);
-//	  readSens2(); //ゴール判???
+	  readSens2(); //ゴール判???
 
     /* USER CODE END WHILE */
 

@@ -71,9 +71,9 @@ void readSens(void){
    	  if (HAL_ADC_Start_DMA(&hadc2,(uint32_t *)side_sens,2) != HAL_OK){
    		  Error_Handler();
    	  }
-//    	  	  char msg[100];
-//    	        snprintf(msg, sizeof(msg), "ADC Value 0: %u, ADC Value 1: %u\r\n", side_sens[0], side_sens[1]);
-//    	        HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+    	  	  char msg[100];
+    	        snprintf(msg, sizeof(msg), "ADC Value 0: %u, ADC Value 1: %u\r\n", side_sens[0], side_sens[1]);
+    	        HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
    	        Line3_sens[0] = side_sens[0];
    	        Line3_sens[1] = side_sens[1];
 
