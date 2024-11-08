@@ -63,6 +63,10 @@ extern float min_black_a[SENSOR_COUNT];
 
 extern float max_white_b[SENSOR_COUNT];
 extern float min_black_b[SENSOR_COUNT];
+
+extern float max_white_0;
+extern float max_white_1;
+
 // test.h
 void button();
 void calibrate_sensors();

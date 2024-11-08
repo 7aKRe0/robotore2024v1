@@ -68,6 +68,9 @@ float min_black_a[SENSOR_COUNT];
 float max_white_b[SENSOR_COUNT];
 float min_black_b[SENSOR_COUNT];
 
+float max_white_0 = 0;
+float max_white_1 = 0;
+
 
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
