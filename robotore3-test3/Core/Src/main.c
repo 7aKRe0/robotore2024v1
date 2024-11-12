@@ -355,7 +355,7 @@ int main(void)
 //	    Encoder_Read();
 //
 //	   controlMotor(-500, -500);
-//	  readSens2(); //ゴール判???
+	  readSens2(); //ゴール判???
 
     /* USER CODE END WHILE */
 
