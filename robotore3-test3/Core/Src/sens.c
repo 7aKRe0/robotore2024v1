@@ -10,61 +10,61 @@
 #include <string.h>
 
 
-void readSens(void){
- 	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens,4) != HAL_OK){
- 	              Error_Handler();
- 	     }
-// 	    char msg[100];
-       // SピンをHIGHに
- 	    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_1, GPIO_PIN_SET);
- 	    //HAL_Delay(1);
- 	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
-// 	      snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i, main_sens[i]);
-// 	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
- 	      Line1_sens[i] = main_sens[i];
- 	    }
- 	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens,4) != HAL_OK){
- 	              Error_Handler();
- 	     }
-
- 	   //Sをlow
- 	    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_RESET);
- 	    //HAL_Delay(1);
- 	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
-// 	      snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i+4, main_sens[i]);
-// 	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
- 	      Line2_sens[i] = main_sens[i];//?
- 	    }
-   }
-
 //void readSens(void){
-//    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens, 4) != HAL_OK){
-//        Error_Handler();
-//    }
-//    char msg[200];  // バッファを増やして一度にまとめて送信
-//    int msg_len = 0;
+// 	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens,4) != HAL_OK){
+// 	              Error_Handler();
+// 	     }
+//// 	    char msg[100];
+//       // SピンをHIGHに
+// 	    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_1, GPIO_PIN_SET);
+// 	    //HAL_Delay(1);
+// 	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
+//// 	      snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i, main_sens[i]);
+//// 	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+// 	      Line1_sens[i] = main_sens[i];
+// 	    }
+// 	    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens,4) != HAL_OK){
+// 	              Error_Handler();
+// 	     }
 //
-//    // SピンをHIGHに
-//    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_SET);
-//    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
-//        msg_len += snprintf(msg + msg_len, sizeof(msg) - msg_len, "i%d: %u, ", i + 1, main_sens[i]);
-//        Line1_sens[i] = main_sens[i];
-//    }
-//    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens, 4) != HAL_OK){
-//        Error_Handler();
-//    }
-//
-//    // SピンをLOWに
-//    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_RESET);
-//    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
-//        msg_len += snprintf(msg + msg_len, sizeof(msg) - msg_len, "i%d: %u, ", i + 5, main_sens[i]);
-//        Line2_sens[i] = main_sens[i];
-//    }
-//
-//    // 最後の改行を追加して1行で出力
-//    snprintf(msg + msg_len, sizeof(msg) - msg_len, "\r\n");
-//    HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-//}
+// 	   //Sをlow
+// 	    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_RESET);
+// 	    //HAL_Delay(1);
+// 	    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
+//// 	      snprintf(msg, sizeof(msg), "ADC Value %d: %u\r\n", i+4, main_sens[i]);
+//// 	      HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+// 	      Line2_sens[i] = main_sens[i];//?
+// 	    }
+//   }
+
+void readSens(void){
+    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens, 4) != HAL_OK){
+        Error_Handler();
+    }
+    char msg[200];  // バッファを増やして一度にまとめて送信
+    int msg_len = 0;
+
+    // SピンをHIGHに
+    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_SET);
+    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
+        msg_len += snprintf(msg + msg_len, sizeof(msg) - msg_len, "i%d: %u, ", i + 1, main_sens[i]);
+        Line1_sens[i] = main_sens[i];
+    }
+    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens, 4) != HAL_OK){
+        Error_Handler();
+    }
+
+    // SピンをLOWに
+    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, GPIO_PIN_RESET);
+    for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
+        msg_len += snprintf(msg + msg_len, sizeof(msg) - msg_len, "i%d: %u, ", i + 5, main_sens[i]);
+        Line2_sens[i] = main_sens[i];
+    }
+
+    // 最後の改行を追加して1行で出力
+    snprintf(msg + msg_len, sizeof(msg) - msg_len, "\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+}
 
    void readSens2(){
 
@@ -90,7 +90,7 @@ void readSens(void){
 
    void calibrate_sensors(void) {
 	   playSound(1000, 100,0.9);
-       for (int i = 0; i < 50000; i++) {//変更
+       for (int i = 0; i < 25000; i++) {//変更
            readSens2();
            readSens();
 

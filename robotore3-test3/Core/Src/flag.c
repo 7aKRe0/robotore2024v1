@@ -44,48 +44,33 @@ int box = -1;
  uint32_t last_sens_time = 0;
  uint32_t De_last,De_time = 0;
 void flag(void){
-	//printf("side_r_flag: %d, side_l_flag: %d\n\r", side_r_flag, side_l_flag);
-//	printf("side_r_flag: %d, side_l_flag: %d, stop_flag: %d\n\r", side_r_flag, side_l_flag, stop_flag);
 
-	  if(Line3_sens[0] > threshold_0){
-		  current_ftime = HAL_GetTick();
-			side_l_flag = 1;
-			side_l_time = 0;
+	  if(Line3_sens[0] > threshold_0){//左認識
+		  side_l_time = HAL_GetTick();
+		  side_l_flag = 1;
 	  }
-	  if(side_l_flag == 1){
-		  side_l_time++;
-	  }
-	  if(side_l_time >= 70){
-		  side_l_time = 0;
-		  side_l_flag = 0;
-		  }
-	  if(Line3_sens[1] > threshold_1){
+
+	  if(Line3_sens[1] > threshold_1){//認識
+		  side_r_time = HAL_GetTick();
 		  side_r_flag = 1;
-//		  playSound(1000, 100,0.9);
-	  }else{
-		  side_r_flag = 0;
+		  playSound(1000, 100,0.9);
 	  }
-	  if(side_r_flag == 1 && side_l_flag == 0 ){
-//			stop_flag++;
-//			playSound(1000, 100,0.9);
 
-		  De_time = HAL_GetTick();
-		  if(De_time - De_last > 80){
+	  if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 30) && side_r_flag == 0) {
+	          side_l_flag = 0;
+	      }
 
-			De_last = De_time;
-
-			if(stop_flag < 2){
-			stop_flag++;
-			playSound(1000, 100,0.9);
+	  if (side_r_flag == 1) {
+		if ((HAL_GetTick() - side_r_time < 30) && side_l_flag == 1) {
+			side_r_flag = 0;
+			side_l_flag = 0;
+			} else if (HAL_GetTick() - side_r_time >= 30) {
+				stop_flag++;
+				side_r_flag = 0;
 			}
-		  }
-	  }
-
+		}
 	  if(stop_flag >= 2){
-		  //controlMotor(0,0);
 		  base_speed = 0;
-
-
 	  }
  }
 

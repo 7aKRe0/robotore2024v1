@@ -191,7 +191,7 @@ void mapFirstLayer() {
 
 void mapSecondLayer() {
 	firstLapComplete =1;
-   base_speed = 300;
+   base_speed = 500;
 
 //   flag();
 }
@@ -335,7 +335,7 @@ int main(void)
   {
 
 	    //HAL_Delay(100000);
-//	    readSens();  // センサの値を読み取る
+	    readSens();  // センサの値を読み取る
 	  //HAL_Delay(1);
 
 //	    readSensors();
@@ -343,10 +343,10 @@ int main(void)
 //	    flag();
 //	  button();
 //
-//	  playSound(1000, 100,0.9);
+//	  playSound(440, 100,1.0);
 //	  HAL_Delay(1000);
 
-	  loop();
+//	  loop();
 
 //	  handleButtonPress();
 
@@ -354,8 +354,8 @@ int main(void)
 
 //	    Encoder_Read();
 //
-//	   controlMotor(-500, -500);
-	  readSens2(); //ゴール判???
+//	   controlMotor(-800, -800);
+//	  readSens2(); //ゴール判???
 
     /* USER CODE END WHILE */
 
