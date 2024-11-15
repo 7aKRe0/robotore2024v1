@@ -45,12 +45,12 @@ int box = -1;
  uint32_t De_last,De_time = 0;
 void flag(void){
 
-	  if(Line3_sens[0] > threshold_0){//左認識
+	  if(Line3_sens[1] > threshold_0){//左認識
 		  side_l_time = HAL_GetTick();
 		  side_l_flag = 1;
 	  }
 
-	  if(Line3_sens[1] > threshold_1){//認識
+	  if(Line3_sens[0] > threshold_1){//認識
 		  side_r_time = HAL_GetTick();
 		  side_r_flag = 1;
 		  playSound(1000, 100,0.9);

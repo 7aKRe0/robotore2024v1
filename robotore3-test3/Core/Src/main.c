@@ -30,9 +30,9 @@
 // 実際の定義と初期化
 float base_speed = 500;
 float max_speed = 900;
-float Kp = 0.1;
+float Kp = 0.04;
 float Ki = 0.0;//不要
-float Kd = 0.0008;
+float Kd = 0.008;
 float previous_error = 0.0;
 float integral = 0.0;
 float target_speed_L = 0.0;
@@ -335,7 +335,7 @@ int main(void)
   {
 
 	    //HAL_Delay(100000);
-	    readSens();  // センサの値を読み取る
+//	    readSens();  // センサの値を読み取る
 	  //HAL_Delay(1);
 
 //	    readSensors();
@@ -346,7 +346,7 @@ int main(void)
 //	  playSound(440, 100,1.0);
 //	  HAL_Delay(1000);
 
-//	  loop();
+	  loop();
 
 //	  handleButtonPress();
 
