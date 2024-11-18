@@ -74,6 +74,8 @@ void playSound(uint32_t frequency, uint32_t duration, float volume);
 void readSensors();
 void SpeedControl();
 
+void flag(void);
+void flag2(void);
 
 /* USER CODE END Includes */
 

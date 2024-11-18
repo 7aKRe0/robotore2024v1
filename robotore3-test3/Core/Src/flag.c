@@ -43,82 +43,93 @@ int box = -1;
 
  uint32_t last_sens_time = 0;
  uint32_t De_last,De_time = 0;
-void flag(void){
 
-	  if(Line3_sens[1] > threshold_0){//左認識
-		  side_l_time = HAL_GetTick();
-		  side_l_flag = 1;
-	  }
 
-	  if(Line3_sens[0] > threshold_1){//認識
-		  side_r_time = HAL_GetTick();
-		  side_r_flag = 1;
-		  playSound(1000, 100,0.9);
-	  }
+ void flag(void) {
+	 threshold_0=1500;
+	 threshold_1=1500;
+//	 HAL_Delay(50);
+     if (Line3_sens[1] > threshold_0) { // 左認識
+         side_l_time = HAL_GetTick();
+         side_l_flag = 1;
+     }
 
-	  if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 30) && side_r_flag == 0) {
-	          side_l_flag = 0;
-	      }
+     if (Line3_sens[0] > threshold_1) { // 右認識
+         side_r_time = HAL_GetTick();
+         side_r_flag = 1;
+     }
 
-	  if (side_r_flag == 1) {
-		if ((HAL_GetTick() - side_r_time < 30) && side_l_flag == 1) {
-			side_r_flag = 0;
-			side_l_flag = 0;
-			} else if (HAL_GetTick() - side_r_time >= 30) {
-				stop_flag++;
-				side_r_flag = 0;
-			}
-		}
-	  if(stop_flag >= 2){
-		  base_speed = 0;
-	  }
+     if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 50) && side_r_flag == 0) {
+         side_l_flag = 0;
+//         printf("111\r\n");
+     }
+
+     if (side_r_flag == 1) {
+         if ((HAL_GetTick() - side_r_time < 50) && side_l_flag == 1) {
+             side_r_flag = 0;
+             side_l_flag = 0;
+//             printf("1222\r\n");
+         } else if (HAL_GetTick() - side_r_time >= 50) {
+             stop_flag++;
+             side_r_flag = 0;
+//             printf("Stop flag incremented: stop_flag=%f\r\n", stop_flag);
+         }
+     }
+
+     if (stop_flag >= 2) {
+         base_speed = 0;
+         printf("GG stop_flag\r\n");
+//         stop_flag = 0;
+     }
  }
 
-void flag2(void){
-	uint32_t current_2ftime = HAL_GetTick();
-	  if(Line3_sens[0] > threshold_0){
-			if (current_2ftime - last_sens_time > 300) {
-				side_l_flag = 1;
-				side_l_time = 0;
-				playSound(1000, 100,0.9);
-				secondLayerRun();
-				last_sens_time = current_2ftime;
-			}
-	  }else{
-		  return;
-	  }
-	  if(side_l_flag == 1){
-		  side_l_time++;
-	  }
-	  if(side_l_time >= 70){
-		  side_l_time = 0;
-		  side_l_flag = 0;
-		  }
-	  if(Line3_sens[1] > threshold_1){
-		  side_r_flag = 1;
-	  }else{
-		  side_r_flag = 0;
-	  }
-	  if(side_r_flag == 1 && side_l_flag == 0 ){
-//		  stop_flag++;
 
-		  De_time = HAL_GetTick();
-		 		  if(De_time - De_last > 80){
-		 			De_last = De_time;
-		 		  }else{
-		 			  return;
-		 		  }
-	  }
-
-	  while(stop_flag >= 2){
-		  //controlMotor(0,0);
-		  base_speed = 0;
-
-			button();
-			if(stop_flag == 0){
-				break;
-			}
-
-
-	  }
- }
+//
+//void flag2(void){
+//	uint32_t current_2ftime = HAL_GetTick();
+//	  if(Line3_sens[0] > threshold_0){
+//			if (current_2ftime - last_sens_time > 300) {
+//				side_l_flag = 1;
+//				side_l_time = 0;
+//				playSound(1000, 100,0.9);
+//				secondLayerRun();
+//				last_sens_time = current_2ftime;
+//			}
+//	  }else{
+//		  return;
+//	  }
+//	  if(side_l_flag == 1){
+//		  side_l_time++;
+//	  }
+//	  if(side_l_time >= 70){
+//		  side_l_time = 0;
+//		  side_l_flag = 0;
+//		  }
+//	  if(Line3_sens[1] > threshold_1){
+//		  side_r_flag = 1;
+//	  }else{
+//		  side_r_flag = 0;
+//	  }
+//	  if(side_r_flag == 1 && side_l_flag == 0 ){
+////		  stop_flag++;
+//
+//		  De_time = HAL_GetTick();
+//		 		  if(De_time - De_last > 80){
+//		 			De_last = De_time;
+//		 		  }else{
+//		 			  return;
+//		 		  }
+//	  }
+//
+//	  while(stop_flag >= 2){
+//		  //controlMotor(0,0);
+//		  base_speed = 0;
+//
+//			button();
+//			if(stop_flag == 0){
+//				break;
+//			}
+//
+//
+//	  }
+// }

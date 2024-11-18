@@ -22,14 +22,15 @@
 #include <stdio.h>
 #include <string.h>
 
+
 #define SENSOR_COUNT 4
 #define dt 0.01
 #define TIRE 22
 #define M_PI 3.1415926535
 
 // 実際の定義と初期化
-float base_speed = 500;
-float max_speed = 900;
+float base_speed = 0;
+//float max_speed = 900;
 float Kp = 0.04;
 float Ki = 0.0;//不要
 float Kd = 0.008;
@@ -184,16 +185,16 @@ int _write(int file, char *ptr, int len) {
 
 
 void mapFirstLayer() {
-	base_speed = 0;
+	base_speed = 400;
 //	stop_flag = 0;
-//	flag();
+	flag();
 }
 
 void mapSecondLayer() {
-	firstLapComplete =1;
-   base_speed = 500;
+//	firstLapComplete =1;
+   base_speed = 400;
 
-//   flag();
+   flag();
 }
 
 
@@ -220,7 +221,7 @@ void loop() {
            switch (mode) {
                case 1:
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Calibration Started\r\n", 21, HAL_MAX_DELAY);
-                   HAL_Delay(200);
+//                   HAL_Delay(200);
                    base_speed = 0;
                    calibrate_sensors();
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Calibration Stopped\r\n", 21, HAL_MAX_DELAY);
@@ -247,11 +248,11 @@ void loop() {
 
        if (mode == 2) {
            readSensors();
-           SpeedControl();
-//           flag();
+//           SpeedControl();
+           flag();
        } else if (mode >= 3) {
            readSensors();
-           SpeedControl();
+//           SpeedControl();
 //           flag2();
        }
    }
@@ -334,7 +335,6 @@ int main(void)
   while(1)
   {
 
-	    //HAL_Delay(100000);
 //	    readSens();  // センサの値を読み取る
 	  //HAL_Delay(1);
 
@@ -346,15 +346,16 @@ int main(void)
 //	  playSound(440, 100,1.0);
 //	  HAL_Delay(1000);
 
-	  loop();
+//	  loop();
 
 //	  handleButtonPress();
 
 //	  calibrate_sensors();
+//	  flag();
 
 //	    Encoder_Read();
 //
-//	   controlMotor(-800, -800);
+	   controlMotor(-500, -500);
 //	  readSens2(); //ゴール判???
 
     /* USER CODE END WHILE */
