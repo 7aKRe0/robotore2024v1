@@ -50,7 +50,7 @@ float calculateError() {
 		  Line2_sum += (Line2_sens[i]*g2[i])*3000/(max_white_b[i] - min_black_b[i]);
 	  }
 
-	  return  Line2_sum - Line1_sum;
+	  return  Line1_sum - Line2_sum;
 
 
 }
