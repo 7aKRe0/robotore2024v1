@@ -54,36 +54,36 @@ float calculateError() {
 
 
 }
-
- void Encoder_Read(void) {
-      static int cnt_old_L = 0, cnt_old_R = 0;
-      int cnt_new_L = __HAL_TIM_GET_COUNTER(&htim3);
-      int cnt_new_R = __HAL_TIM_GET_COUNTER(&htim1);
-      int cnt_L = cnt_new_L - cnt_old_L;
-      int cnt_R = cnt_new_R - cnt_old_R;
-
-      // カウンタ値の更新
-      cnt_old_L = cnt_new_L;
-      cnt_old_R = cnt_new_R;
-
-      // カウンタのオーバ�??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��フロー
-      if (cnt_L > 32767) cnt_L -= 65536;
-      if (cnt_L < -32767) cnt_L += 65536;
-      if (cnt_R > 32767) cnt_R -= 65536;
-      if (cnt_R < -32767) cnt_R += 65536;
-
-      // 速度の計�?
-      current_speed_L = (3.6 * TIRE * M_PI * cnt_L) / (4096.0 * dt);
-      current_speed_R = (3.6 * TIRE * M_PI * cnt_R) / (4096.0 * dt);
-
-      adjusted_speed_L = current_speed_L * -0.0156;
-      adjusted_speed_R = current_speed_R * -0.0156;
-
-      // ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?バッグ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?報の送信
- //      char scnt[100];
- //      sprintf(scnt, "Speed_L: %f, Speed_R: %f\r\n", adjusted_speed_L, adjusted_speed_R);
- //      HAL_UART_Transmit(&huart2, (uint8_t*)scnt, strlen(scnt) + 1, HAL_MAX_DELAY);
-  }
+//
+// void Encoder_Read(void) {
+//      static int cnt_old_L = 0, cnt_old_R = 0;
+//      int cnt_new_L = __HAL_TIM_GET_COUNTER(&htim3);
+//      int cnt_new_R = __HAL_TIM_GET_COUNTER(&htim1);
+//      int cnt_L = cnt_new_L - cnt_old_L;
+//      int cnt_R = cnt_new_R - cnt_old_R;
+//
+//      // カウンタ値の更新
+//      cnt_old_L = cnt_new_L;
+//      cnt_old_R = cnt_new_R;
+//
+//      // カウンタのオーバ�??????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��フロー
+//      if (cnt_L > 32767) cnt_L -= 65536;
+//      if (cnt_L < -32767) cnt_L += 65536;
+//      if (cnt_R > 32767) cnt_R -= 65536;
+//      if (cnt_R < -32767) cnt_R += 65536;
+//
+//      // 速度の計�?
+//      current_speed_L = (3.6 * TIRE * M_PI * cnt_L) / (4096.0 * dt);
+//      current_speed_R = (3.6 * TIRE * M_PI * cnt_R) / (4096.0 * dt);
+//
+//      adjusted_speed_L = current_speed_L * -0.0156;
+//      adjusted_speed_R = current_speed_R * -0.0156;
+//
+//      // ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?バッグ?????��?��??��?��???��?��??��?��????��?��??��?��???��?��??��?��?報の送信
+// //      char scnt[100];
+// //      sprintf(scnt, "Speed_L: %f, Speed_R: %f\r\n", adjusted_speed_L, adjusted_speed_R);
+// //      HAL_UART_Transmit(&huart2, (uint8_t*)scnt, strlen(scnt) + 1, HAL_MAX_DELAY);
+//  }
 
 
 
@@ -113,18 +113,18 @@ float calculateError() {
       target_speed_L = base_speed - output;
       target_speed_R = base_speed + output;
 
-      Encoder_Read();
+//      Encoder_Read();
+//
+//      float speed_error_L = target_speed_L - adjusted_speed_L;//+
+//      float speed_error_R = target_speed_R - adjusted_speed_R;
 
-      float speed_error_L = target_speed_L - adjusted_speed_L;//+
-      float speed_error_R = target_speed_R - adjusted_speed_R;
+       float duty_L = -1*(target_speed_L);
+       float duty_R = -1*(target_speed_R);
 
- //      float duty_L = -1*(target_speed_L);
- //      float duty_R = -1*(target_speed_R);
+//      float speed_P_gain = 1.3;//速度のPゲイン
 
-      float speed_P_gain = 1.3;//速度のPゲイン
-
-      float duty_L = -1*(speed_error_L * speed_P_gain);
-      float duty_R = -1*(speed_error_R * speed_P_gain);
+//      float duty_L = -1*(speed_error_L * speed_P_gain);
+//      float duty_R = -1*(speed_error_R * speed_P_gain);
 
 
 
@@ -140,6 +140,4 @@ float calculateError() {
 
       // モータを制御
       controlMotor(duty_L, duty_R);
-      //readSens2();
-      //flag();
   }
