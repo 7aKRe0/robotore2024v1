@@ -36,7 +36,7 @@
 // 実際の定義と初期化
 float base_speed = 0;
 //float max_speed = 900;
-float Kp = 0.2;
+float Kp = 0.1;
 float Ki = 0.0;//不要
 float Kd = 0.008;
 float previous_error = 0.0;

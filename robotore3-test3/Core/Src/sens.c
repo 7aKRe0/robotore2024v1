@@ -89,7 +89,7 @@ void readSens(void){
 
    void calibrate_sensors(void) {
 	   playSound(1000, 100,0.9);
-       for (int i = 0; i < 25000; i++) {//変更
+       for (int i = 0; i < 50000; i++) {//変更
            readSens2();
            readSens();
 
