@@ -33,7 +33,7 @@ void readSens(void){
  	      Line2_sens[i] = main_sens[i];//?
  	    }
    }
-//
+
 //void readSens(void){
 //    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens, 4) != HAL_OK){
 //        Error_Handler();
