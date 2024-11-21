@@ -340,11 +340,16 @@ int main(void)
 //	  handleButtonPress();
 
 //	  calibrate_sensors();
-//	  flag();
+
 
 //	    Encoder_Read();
-//
-//	   controlMotor(-1000, 1000);
+
+
+//	   controlMotor(800, 800);
+//	   HAL_Delay(3000);
+//	   controlMotor(-800, -800);
+//	   HAL_Delay(3000);
+
 //	  readSens2(); //ゴール判???
 
     /* USER CODE END WHILE */

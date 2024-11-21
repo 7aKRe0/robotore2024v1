@@ -23,7 +23,7 @@ void controlMotor(double duty_L, double duty_R){
  	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, -duty_L);
  	      }
 
- 	      // 右モータの制御
+// 	       右モータの制御
  	      if (duty_R >= 0) {
  	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET); // PHをHIGH(正転)
  	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, duty_R);
@@ -31,6 +31,23 @@ void controlMotor(double duty_L, double duty_R){
  	          HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET); // PHをLOW()
  	          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, -duty_R);
  	      }
+
+// 	     if (duty_R >= 0) {
+// 	         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+// 	        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, duty_R);
+// 	         printf("Right Motor Forward: GPIO_PIN_11 = HIGH, Duty = %.2f\r\n", duty_R);
+// 	     } else {
+// 	         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+// 	        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, -duty_R);
+// 	         printf("Right Motor Reverse: GPIO_PIN_11 = LOW, Duty = %.2f\r\n", -duty_R);
+// 	     }
+//
+//
+// 	     // デバッグ出力
+// 	     printf("duty_L: %.2f, duty_R: %.2f\r\n", duty_L, duty_R);
+// 	     printf("GPIOA_PIN_5: %d, GPIOA_PIN_11: %d\r\n",
+// 	            HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5),
+// 	            HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11));
 
  }
 
@@ -128,10 +145,10 @@ float calculateError() {
 
 
 
-      if (duty_L > 2000) duty_L = 2000;
-      if (duty_L < -2000) duty_L = -2000;
-      if (duty_R > 2000) duty_R = 2000;
-      if (duty_R < -2000) duty_R = -2000;
+      if (duty_L > 3000) duty_L = 3000;
+      if (duty_L < -3000) duty_L = -3000;
+      if (duty_R > 3000) duty_R = 3000;
+      if (duty_R < -3000) duty_R = -3000;
 
       //float error_speed_L = -0.1*(target_speed_L - current_speed_L);
       //float error_speed_R = -0.1*(target_speed_R - current_speed_R);

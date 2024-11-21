@@ -59,17 +59,17 @@ int box = -1;
          side_r_flag = 1;
      }
 
-     if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 50) && side_r_flag == 0) {
+     if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 70) && side_r_flag == 0) {
          side_l_flag = 0;
 //         printf("111\r\n");
      }
 
      if (side_r_flag == 1) {
-         if ((HAL_GetTick() - side_r_time < 50) && side_l_flag == 1) {
+         if ((HAL_GetTick() - side_r_time < 70) && side_l_flag == 1) {
              side_r_flag = 0;
              side_l_flag = 0;
 //             printf("1222\r\n");
-         } else if (HAL_GetTick() - side_r_time >= 50) {
+         } else if (HAL_GetTick() - side_r_time >= 70) {
              stop_flag++;
              side_r_flag = 0;
 //             printf("Stop flag incremented: stop_flag=%f\r\n", stop_flag);
