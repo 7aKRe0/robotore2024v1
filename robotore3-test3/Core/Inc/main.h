@@ -76,8 +76,6 @@ void Error_Handler(void);
 #define ENC2_1_GPIO_Port GPIOA
 #define MOT2EN_Pin GPIO_PIN_10
 #define MOT2EN_GPIO_Port GPIOA
-#define MOT1PH_Pin GPIO_PIN_11
-#define MOT1PH_GPIO_Port GPIOA
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14

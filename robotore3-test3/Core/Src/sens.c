@@ -35,7 +35,7 @@ void readSens(void){
    }
 
 //void readSens(void){
-//    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens, 4) != HAL_OK){
+//    if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *) main_sens,                    4) != HAL_OK){
 //        Error_Handler();
 //    }
 //    char msg[200];  // バッファを増やして一度にまとめて送信
