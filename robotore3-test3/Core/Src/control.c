@@ -56,8 +56,8 @@ void controlMotor(double duty_L, double duty_R){
 float calculateError() {
 	  float Line1_sum = 0.0;
 	  float Line2_sum = 0.0;
-	  int g1[] = {4,3,2,1};
-	  int g2[] = {1,2,3,4};
+	  int g1[] = {3,2,2,1};
+	  int g2[] = {1,2,2,3};
 
 	  for (int i = 0; i < SENSOR_COUNT; i++){//右
 		  Line1_sum += (Line1_sens[i]*g1[i])*3000/(max_white_a[i] - min_black_a[i]);
