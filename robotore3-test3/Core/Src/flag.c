@@ -46,8 +46,8 @@ int box = -1;
 
 
  void flag(void) {
-//	 threshold_0=1500;
-//	 threshold_1=1500;
+	 threshold_0=2000;
+	 threshold_1=3780;
 //	 HAL_Delay(50);
      if (Line3_sens[1] > threshold_0) { // 左認識
          side_l_time = HAL_GetTick();

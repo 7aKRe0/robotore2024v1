@@ -174,16 +174,17 @@ int _write(int file, char *ptr, int len) {
 
 
 void mapFirstLayer() {
-	base_speed = 0;
+	base_speed = 700;
 //	stop_flag = 0;
 	flag();
 }
 
 void mapSecondLayer() {
 //	firstLapComplete =1;
-   base_speed = 500;
+	stop_flag = 0;
+	base_speed = 800;
 
-   flag();
+	flag();
 }
 
 
@@ -242,8 +243,7 @@ void loop() {
        } else if (mode >= 3) {
            readSensors();
 //           SpeedControl();
-//           flag2();
-       }
+           flag();       }
    }
 }
 
