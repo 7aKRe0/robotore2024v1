@@ -48,6 +48,7 @@ int box = -1;
  void flag(void) {
 	 threshold_0=2000;
 	 threshold_1=3780;
+	 int nowtime;
 //	 HAL_Delay(50);
      if (Line3_sens[1] > threshold_0) { // 左認識
          side_l_time = HAL_GetTick();
@@ -70,9 +71,12 @@ int box = -1;
              side_l_flag = 0;
              printf("1222\r\n");
          } else if (HAL_GetTick() - side_r_time >= 100) {
-             stop_flag++;
+        	 nowtime = HAL_GetTick();
+        	 stop_flag++;
              side_r_flag = 0;
-             printf("Stop flag incremented: stop_flag=%f\r\n", stop_flag);
+             if(HAL_GetTick() - nowtime >= 50){
+            	 printf("Stop flag incremented: stop_flag=%f\r\n", stop_flag);
+             }
          }
      }
 
