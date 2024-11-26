@@ -174,15 +174,15 @@ int _write(int file, char *ptr, int len) {
 
 
 void mapFirstLayer() {
+	stop_flag = 0;
 	base_speed = 500;
-//	stop_flag = 0;
 	flag();
 }
 
 void mapSecondLayer() {
 //	firstLapComplete =1;
 	stop_flag = 0;
-	base_speed = 800;
+	base_speed = 700;
 
 	flag();
 }
