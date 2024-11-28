@@ -51,12 +51,12 @@ int box = -1;
 //	 threshold_1=3780;
 //	 HAL_Delay(50);
 
-     if (Line3_sens[1] > threshold_0) { // 左認識
+     if (Line3_sens[0] > threshold_0) { // 左認識
          side_l_time = HAL_GetTick();
          side_l_flag = 1;
      }
 
-     if (Line3_sens[0] > threshold_1) { // 右認識
+     if (Line3_sens[1] > threshold_1) { // 右認識
          side_r_time = HAL_GetTick();
          side_r_flag = 1;
          last_time = HAL_GetTick();
@@ -68,11 +68,11 @@ int box = -1;
      }
 
      if (side_r_flag == 1) {
-         if ((HAL_GetTick() - side_r_time < 300) && side_l_flag == 1) {
+         if ((HAL_GetTick() - side_r_time < 200) && side_l_flag == 1) {
              side_r_flag = 0;
              side_l_flag = 0;
              printf("1222\r\n");
-         } else if (HAL_GetTick() - side_r_time >= 300 && Line3_sens[0] <= threshold_1) {
+         } else if (HAL_GetTick() - side_r_time >= 200 && Line3_sens[1] <= threshold_1) {
         	 stop_flag++;
              side_r_flag = 0;
         	 printf("Stop flag incremented: stop_flag=%f\r\n", stop_flag);

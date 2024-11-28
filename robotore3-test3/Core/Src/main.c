@@ -67,7 +67,7 @@ uint32_t current_time = 0, current_ftime = 0, current_2ftime = 0;
 uint32_t tape_interval = 0;
 int firstLapComplete = 0;
 float threshold_0 = 0, threshold_1 = 0;
-float min_black_0 = 0, min_black_1 = 0;
+float min_black_0 = 3000, min_black_1 = 3000;
 float max_white_a[SENSOR_COUNT];
 float min_black_a[SENSOR_COUNT];
 
