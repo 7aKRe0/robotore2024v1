@@ -36,9 +36,9 @@
 // 実際の定義と初期�?
 float base_speed = 0;
 //float max_speed = 900;
-float Kp = 0.15;
+float Kp = 0.17;
 float Ki = 0.0;//不�?
-float Kd = 0.008;
+float Kd = 0.0055;
 float previous_error = 0.0;
 float integral = 0.0;
 float target_speed_L = 0.0;

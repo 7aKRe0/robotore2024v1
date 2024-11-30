@@ -51,46 +51,48 @@ int box = -1;
 //	 HAL_Delay(50);
 
      if (Line3_sens[0] > threshold_0) { // 左認識
-    	 if(side_l_flag == 0 && Line3_sens[0] <= threshold_0){
-			 side_l_time = HAL_GetTick();
-			 side_l_flag = 1;
-    	 }
+         side_l_time = HAL_GetTick();
+         side_l_flag = 1;
      }
 
      if (Line3_sens[1] > threshold_1) { // 右認識
-    	 if(side_r_flag == 0 && Line3_sens[1] <= threshold_1){
-    		 side_r_time = HAL_GetTick();
-    		 side_r_flag = 1;
+         side_r_time = HAL_GetTick();
+         side_r_flag = 1;
+     }
+
+     if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 150) && side_r_flag == 0) {
+         side_l_flag = 0;
+         printf("111\r\n");
+     }
+
+     if(side_l_flag == 1){
+    	 if((HAL_GetTick() - side_l_time <250) && side_r_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)){
+    		 side_r_flag = 0;
+    		 side_l_flag = 0;
+    		 printf("333\r\n");
     	 }
      }
 
-     if (side_l_flag == 1 && side_r_flag == 1) {
-         if ((HAL_GetTick() - side_l_time < 200) && (HAL_GetTick() - side_r_time < 200)) {
-             // フラグリセット
-             side_l_flag = 0;
-             side_r_flag = 0;
-         }
-     }
-
-     // 左センサ
-     if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 200)) {
-         side_l_flag = 0;
-     }
-
-     // 右センサ
      if (side_r_flag == 1) {
-         if ((HAL_GetTick() - side_r_time >= 200) && Line3_sens[1] <= threshold_1) {
-             stop_flag++;
+         if ((HAL_GetTick() - side_r_time < 250) && side_l_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)) {
              side_r_flag = 0;
+             side_l_flag = 0;
+             printf("1222\r\n");
+         } else if (HAL_GetTick() - side_r_time >= 250 && Line3_sens[1] <= threshold_1) {
+        	 stop_flag++;
+             side_r_flag = 0;
+        	 printf("Stop flag incremented: stop_flag=\r\n");
          }
      }
 
      if (stop_flag >= 2) {
          base_speed = 0;
-//         printf("GG stop_flag\r\n");
+         printf("GG stop_flag\r\n");
 //         stop_flag = 0;
      }
  }
+
+
 
 
 //
