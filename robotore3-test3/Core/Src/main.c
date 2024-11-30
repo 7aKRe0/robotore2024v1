@@ -36,9 +36,9 @@
 // 実際の定義と初期�?
 float base_speed = 0;
 //float max_speed = 900;
-float Kp = 0.17;
+float Kp = 0.2;
 float Ki = 0.0;//不�?
-float Kd = 0.0055;
+float Kd = 0.047;
 float previous_error = 0.0;
 float integral = 0.0;
 float target_speed_L = 0.0;
@@ -175,14 +175,14 @@ int _write(int file, char *ptr, int len) {
 
 void mapFirstLayer() {
 	stop_flag = 0;
-	base_speed = 700;
+	base_speed = 600;
 	flag();
 }
 
 void mapSecondLayer() {
 //	firstLapComplete =1;
 	stop_flag = 0;
-	base_speed = 1000;
+	base_speed = 800;
 
 	flag();
 }
