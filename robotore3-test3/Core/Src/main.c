@@ -182,7 +182,8 @@ void mapFirstLayer() {
 void mapSecondLayer() {
 //	firstLapComplete =1;
 	stop_flag = 0;
-	base_speed = 800;
+	base_speed = 600;
+	stop_flag = -1;
 
 	flag();
 }

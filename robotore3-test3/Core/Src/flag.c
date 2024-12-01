@@ -66,7 +66,7 @@ int box = -1;
      }
 
      if(side_l_flag == 1){
-    	 if((HAL_GetTick() - side_l_time <200) && side_r_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)){
+    	 if((HAL_GetTick() - side_l_time <250) && side_r_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)){
     		 side_r_flag = 0;
     		 side_l_flag = 0;
     		 printf("333\r\n");
@@ -74,11 +74,11 @@ int box = -1;
      }
 
      if (side_r_flag == 1) {
-         if ((HAL_GetTick() - side_r_time < 200) && side_l_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)) {
+         if ((HAL_GetTick() - side_r_time < 250) && side_l_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)) {
              side_r_flag = 0;
              side_l_flag = 0;
              printf("1222\r\n");
-         } else if (HAL_GetTick() - side_r_time >= 200 && Line3_sens[1] <= threshold_1) {
+         } else if (HAL_GetTick() - side_r_time >= 250 && Line3_sens[1] <= threshold_1) {
         	 stop_flag++;
              side_r_flag = 0;
         	 printf("Stop flag incremented: stop_flag=\r\n");
