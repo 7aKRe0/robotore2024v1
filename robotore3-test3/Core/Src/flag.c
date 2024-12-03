@@ -44,55 +44,74 @@ int box = -1;
  uint32_t last_sens_time = 0;
  uint32_t De_last,De_time = 0;
 
+ uint32_t cross_disable_time = 0;
+ uint32_t cross_disable_duration = 200; // 無効
+
+
+ int isSensorDisabled() {
+     return (HAL_GetTick() - cross_disable_time < cross_disable_duration);
+ }
 
  void flag(void) {
 //	 threshold_0=2000;
 //	 threshold_1=3780;
 //	 HAL_Delay(50);
+	 cross_time = 150;
 
-     if (Line3_sens[0] > threshold_0) { // 左認識
-         side_l_time = HAL_GetTick();
-         side_l_flag = 1;
-     }
+	 if (isSensorDisabled()) {
+		return;
+	}
 
-     if (Line3_sens[1] > threshold_1) { // 右認識
-         side_r_time = HAL_GetTick();
-         side_r_flag = 1;
-     }
+	 if (Line3_sens[0] > threshold_0) { // 左認識
+		 side_l_time = HAL_GetTick();
+		 side_l_flag = 1;
+	 }
 
-     if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= 150) && side_r_flag == 0) {
-         side_l_flag = 0;
-         printf("111\r\n");
-     }
+	 if (Line3_sens[1] > threshold_1) { // 右認識
+		 side_r_time = HAL_GetTick();
+		 side_r_flag = 1;
+	 }
 
-     if(side_l_flag == 1){
-    	 if((HAL_GetTick() - side_l_time <250) && side_r_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)){
-    		 side_r_flag = 0;
-    		 side_l_flag = 0;
-    		 printf("333\r\n");
-    	 }
-     }
+	 if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= cross_time - 50) && side_r_flag == 0) {
+		 side_l_flag = 0;
+		 printf("111\r\n");
+	 }
 
-     if (side_r_flag == 1) {
-         if ((HAL_GetTick() - side_r_time < 250) && side_l_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)) {
-             side_r_flag = 0;
-             side_l_flag = 0;
-             printf("1222\r\n");
-         } else if (HAL_GetTick() - side_r_time >= 250 && Line3_sens[1] <= threshold_1) {
-        	 stop_flag++;
-             side_r_flag = 0;
-        	 printf("Stop flag incremented: stop_flag=\r\n");
-         }
-     }
+	 if(side_l_flag == 1){
+		 if((HAL_GetTick() - side_l_time < cross_time) && side_r_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)){
+			 side_r_flag = 0;
+			 side_l_flag = 0;
+			 cross_disable_time = HAL_GetTick();
+//			 playSound(1000, 100,0.9);
 
-     if (stop_flag >= 2) {
-         base_speed = 0;
-         SpeedControl();
+			 printf("333\r\n");
+		 }
+	 }
 
-         printf("GG stop_flag\r\n");
-//         stop_flag = 0;
-     }
- }
+	 if (side_r_flag == 1) {
+		 if ((HAL_GetTick() - side_r_time < cross_time) && side_l_flag == 1 && (Line3_sens[1] <= threshold_1 || Line3_sens[0] <= threshold_0)) {
+			 side_r_flag = 0;
+			 side_l_flag = 0;
+			 cross_disable_time = HAL_GetTick();
+//			 playSound(1000, 100,0.9);
+
+			 printf("1222\r\n");
+		 } else if (HAL_GetTick() - side_r_time >= cross_time && Line3_sens[1] <= threshold_1 && side_l_flag == 0) {
+			 stop_flag++;
+			 side_r_flag = 0;
+			 playSound(1000, 100,0.9);
+			 printf("Stop flag incremented: stop_flag=\r\n");
+		 }
+	 }
+
+	 if (stop_flag >= 2) {
+		 base_speed = 0;
+		 SpeedControl();
+
+		 printf("GG stop_flag\r\n");
+	//         stop_flag = 0;
+	 }
+	}
 
 
 

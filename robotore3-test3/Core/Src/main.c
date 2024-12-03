@@ -36,9 +36,9 @@
 // 実際の定義と初期�?
 float base_speed = 0;
 //float max_speed = 900;
-float Kp = 0.2;
+float Kp = 0.25;
 float Ki = 0.0;//不�?
-float Kd = 0.047;
+float Kd = 0.06;
 float previous_error = 0.0;
 float integral = 0.0;
 float target_speed_L = 0.0;
@@ -77,6 +77,7 @@ float min_black_b[SENSOR_COUNT];
 float max_white_0 = 0;
 float max_white_1 = 0;
 
+float cross_time;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -182,8 +183,8 @@ void mapFirstLayer() {
 void mapSecondLayer() {
 //	firstLapComplete =1;
 	stop_flag = 0;
-	base_speed = 600;
-	stop_flag = -1;
+	base_speed = 700;
+//	stop_flag = -1;
 
 	flag();
 }
