@@ -56,7 +56,7 @@ int box = -1;
 //	 threshold_0=2000;
 //	 threshold_1=3780;
 //	 HAL_Delay(50);
-	 cross_time = 150;
+	 cross_time = 100;
 
 	 if (isSensorDisabled()) {
 		return;
