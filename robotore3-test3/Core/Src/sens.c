@@ -126,7 +126,7 @@ void readSens(void){
            }
 
            threshold_0 = max_white_0-60;
-           threshold_1 = (min_black_1 + max_white_1)/2-300 ;
+           threshold_1 = max_white_1-1000 ;
 
        }
        playSound(1000, 100,0.9);

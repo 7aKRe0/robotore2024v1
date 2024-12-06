@@ -74,7 +74,7 @@ int box = -1;
 
 	 if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= cross_time - 50) && side_r_flag == 0) {
 		 side_l_flag = 0;
-		 printf("111\r\n");
+//		 printf("111\r\n");
 	 }
 
 	 if(side_l_flag == 1){
@@ -84,7 +84,7 @@ int box = -1;
 			 cross_disable_time = HAL_GetTick();
 //			 playSound(1000, 100,0.9);
 
-			 printf("333\r\n");
+//			 printf("333\r\n");
 		 }
 	 }
 
@@ -95,12 +95,12 @@ int box = -1;
 			 cross_disable_time = HAL_GetTick();
 //			 playSound(1000, 100,0.9);
 
-			 printf("1222\r\n");
+//			 printf("1222\r\n");
 		 } else if (HAL_GetTick() - side_r_time >= cross_time && Line3_sens[1] <= threshold_1 && side_l_flag == 0) {
 			 stop_flag++;
 			 side_r_flag = 0;
 			 playSound(1000, 100,0.9);
-			 printf("Stop flag incremented: stop_flag=\r\n");
+//			 printf("Stop flag incremented: stop_flag=\r\n");
 		 }
 	 }
 
