@@ -60,11 +60,25 @@ float calculateError() {
 	  int g2[] = {1,1,2,2};
 
 	  for (int i = 0; i < SENSOR_COUNT; i++){//右
-		  Line1_sum += (Line1_sens[i]*g1[i])*3000/(max_white_a[i] - min_black_a[i]);
+		  if(Line1_sens[i] >= max_white_a[i]){
+			  Line1_sens[i] = max_white_a[i];
+		  }
+		  if(Line1_sens[i] <= min_black_a[i]){
+			  Line1_sens[i] = min_black_a[i];
+		  }
+
+		  Line1_sum += (Line1_sens[i]*g1[i])*1000/(max_white_a[i] - min_black_a[i]);
 	  }
 
 	  for (int i = 0; i < SENSOR_COUNT; i++){
-		  Line2_sum += (Line2_sens[i]*g2[i])*3000/(max_white_b[i] - min_black_b[i]);
+		  if(Line2_sens[i] >= max_white_b[i]){
+			  Line2_sens[i] = max_white_b[i];
+		  }
+		  if(Line2_sens[i] <= min_black_b[i]){
+			  Line2_sens[i] = min_black_b[i];
+		  }
+
+		  Line2_sum += (Line2_sens[i]*g2[i])*1000/(max_white_b[i] - min_black_b[i]);
 	  }
 
 	  return  Line1_sum - Line2_sum;

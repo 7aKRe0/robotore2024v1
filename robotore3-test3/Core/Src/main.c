@@ -36,9 +36,9 @@
 // 実際の定義と初期�?
 float base_speed = 0;
 //float max_speed = 900;
-float Kp = 0.25;
+float Kp = 0.7;
 float Ki = 0.0;//不�?
-float Kd = 0.2;
+float Kd = 0.6;
 float previous_error = 0.0;
 float integral = 0.0;
 float target_speed_L = 0.0;
@@ -78,6 +78,7 @@ float max_white_0 = 0;
 float max_white_1 = 0;
 
 float cross_time;
+float ikiti;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/

@@ -68,6 +68,7 @@ extern float max_white_0;
 extern float max_white_1;
 
 extern float cross_time;
+extern float ikiti;
 // test.h
 void button();
 void calibrate_sensors();
