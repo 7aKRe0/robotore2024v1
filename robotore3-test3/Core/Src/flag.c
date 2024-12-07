@@ -99,16 +99,16 @@ int box = -1;
 		 } else if (HAL_GetTick() - side_r_time >= cross_time && Line3_sens[1] <= threshold_1 && side_l_flag == 0) {
 			 stop_flag++;
 			 side_r_flag = 0;
-			 playSound(1000, 100,0.9);
+//			 playSound(1000, 100,0.9);
 //			 printf("Stop flag incremented: stop_flag=\r\n");
 		 }
 	 }
 
 	 if (stop_flag >= 2) {
 		 base_speed = 0;
-		 SpeedControl();
+//		 SpeedControl();
 
-		 printf("GG stop_flag\r\n");
+//		 printf("GG stop_flag\r\n");
 	//         stop_flag = 0;
 	 }
 	}
