@@ -234,6 +234,8 @@ void loop() {
 
                default:
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Unknown Mode\r\n", 14, HAL_MAX_DELAY);
+                   stop_flag = 0;
+                   mapFirstLayer();
                    break;
            }
            mode_processed = 1;

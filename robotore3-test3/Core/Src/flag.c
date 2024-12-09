@@ -45,7 +45,7 @@ int box = -1;
  uint32_t De_last,De_time = 0;
 
  uint32_t cross_disable_time = 0;
- uint32_t cross_disable_duration = 200; // 無効
+ uint32_t cross_disable_duration = 100; // 無効
 
 
  int isSensorDisabled() {
