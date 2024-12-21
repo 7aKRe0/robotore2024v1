@@ -184,13 +184,20 @@ void mapFirstLayer() {
 void mapSecondLayer() {
 //	firstLapComplete =1;
 	stop_flag = 0;
-	base_speed = 700;
+	base_speed = 800;
 //	stop_flag = -1;
 
 	flag();
 }
 
+void mapThirdSeLayer() {
+//	firstLapComplete =1;
+	stop_flag = 0;
+	base_speed = 800;
+//	stop_flag = -1;
 
+	flag();
+}
 
 
 
@@ -229,6 +236,12 @@ void loop() {
                case 3:
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Started\r\n", 31, HAL_MAX_DELAY);
                    mapSecondLayer();
+                   HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Completed\r\n", 33, HAL_MAX_DELAY);
+                   break;
+
+               case 4:
+                   HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Started\r\n", 31, HAL_MAX_DELAY);
+                   mapThirdSeLayer();
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Completed\r\n", 33, HAL_MAX_DELAY);
                    break;
 

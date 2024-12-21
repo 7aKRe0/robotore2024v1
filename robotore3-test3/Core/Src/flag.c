@@ -75,11 +75,13 @@ int box = -1;
 	 if (Line3_sens[0] > threshold_0) { // 左認識
 		 side_l_time = HAL_GetTick();
 		 side_l_flag = 1;
+//		 printf("h \r\n");
 	 }
 
 	 if (ikiti > threshold_1) { // 右認識
 		 side_r_time = HAL_GetTick();
 		 side_r_flag = 1;
+//		 printf("m %f\r\n", ikiti);
 	 }
 
 	 if (side_l_flag == 1 && (HAL_GetTick() - side_l_time >= cross_time - 50) && side_r_flag == 0) {
