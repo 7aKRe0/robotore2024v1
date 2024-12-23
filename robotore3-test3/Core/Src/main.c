@@ -177,14 +177,14 @@ int _write(int file, char *ptr, int len) {
 
 void mapFirstLayer() {
 	stop_flag = 0;
-	base_speed = 700;
+	base_speed = 600;
 	flag();
 }
 
 void mapSecondLayer() {
 //	firstLapComplete =1;
 	stop_flag = 0;
-	base_speed = 800;
+	base_speed = 700;
 //	stop_flag = -1;
 
 	flag();
@@ -234,12 +234,18 @@ void loop() {
                    break;
 
                case 3:
+                   HAL_UART_Transmit(&huart2, (uint8_t*)"First Layer Mapping Started\r\n", 30, HAL_MAX_DELAY);
+                   mapFirstLayer();
+                   HAL_UART_Transmit(&huart2, (uint8_t*)"First Layer Mapping Completed\r\n", 32, HAL_MAX_DELAY);
+                   break;
+
+               case 4:
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Started\r\n", 31, HAL_MAX_DELAY);
                    mapSecondLayer();
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Completed\r\n", 33, HAL_MAX_DELAY);
                    break;
 
-               case 4:
+               case 5:
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Started\r\n", 31, HAL_MAX_DELAY);
                    mapThirdSeLayer();
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Second Layer Mapping Completed\r\n", 33, HAL_MAX_DELAY);
@@ -248,7 +254,7 @@ void loop() {
                default:
                    HAL_UART_Transmit(&huart2, (uint8_t*)"Unknown Mode\r\n", 14, HAL_MAX_DELAY);
                    stop_flag = 0;
-                   mapFirstLayer();
+                   mapThirdSeLayer();
                    break;
            }
            mode_processed = 1;
